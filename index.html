@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Следопыт — направление по отпечатку</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">СЛ</div>
+        <div>
+          <h1>Следопыт</h1>
+          <p>Анализ направления по следу стопы</p>
+        </div>
+      </div>
+      <div class="top-actions">
+        <label class="btn primary">
+          Загрузить фото
+          <input id="fileInput" type="file" accept="image/*" hidden />
+        </label>
+      </div>
+    </header>
+    <main class="layout">
+      <section class="stage-wrap">
+        <div class="toolbar">
+          <div class="tools">
+            <button class="tool" data-tool="heel">Каблук</button>
+            <button class="tool" data-tool="toe">Носок</button>
+            <button class="tool" data-tool="next">След 2</button>
+            <button class="tool" data-tool="scatter">Выброс</button>
+            <button class="tool" data-tool="scaleA">М1</button>
+            <button class="tool" data-tool="scaleB">М2</button>
+          </div>
+          <div class="zoom-box">
+            <button id="btnFit" class="btn ghost">В кадр</button>
+            <button id="btnClear" class="btn ghost">Сброс</button>
+          </div>
+        </div>
+        <div id="stage" class="stage">
+          <canvas id="canvas"></canvas>
+          <div id="empty" class="empty"><strong>Загрузите фото следа</strong><span>Отметьте каблук, носок и след 2 — приложение выдаст курс.</span></div>
+        </div>
+      </section>
+      <aside class="panel">
+        <section class="card verdict"><h2>Направление движения</h2><div id="verdictBody" class="verdict-body muted">Отметьте каблук и носок.</div></section>
+        <section class="card"><h2>Схема</h2><canvas id="scheme" width="640" height="360"></canvas><p class="hint" id="schemeCaption"></p></section>
+        <section class="card"><h2>Как двигался</h2><div id="howMoved" class="narrative muted"></div><ol id="howSteps" class="phases"></ol></section>
+        <section class="card"><h2>Режим</h2><div class="seg" id="gaitMode"><button data-mode="auto" class="active">Авто</button><button data-mode="forward">Вперёд</button><button data-mode="backward">Задом</button></div></section>
+        <section class="card"><h2>Правила</h2><ul class="rules" id="rulesList"></ul></section>
+        <section class="card"><h2>Биомеханика</h2><ol class="phases" id="phases"><li data-phase="heel"><b>Пятка</b><span>посадка</span></li><li data-phase="roll"><b>Прокат</b><span>свод</span></li><li data-phase="push"><b>Толчок</b><span>носок</span></li><li data-phase="lift"><b>Перенос</b><span>выволока</span></li></ol></section>
+        <section class="card"><h2>Рулетка</h2><label class="field">Длина отрезка, см<input id="tapeCm" type="number" min="1" step="0.1" /></label><div id="scaleOut" class="hint"></div></section>
+        <section class="card"><h2>Кадр</h2><label class="field">Север кадра, °<input id="northOffset" type="number" min="0" max="359" value="0" /></label><label class="field">Участок<input id="siteLabel" type="text" /></label><button id="btnReport" class="btn block primary">Полный отчёт</button></section>
+      </aside>
+    </main>
+  </div>
+  <script src="rules.js"></script>
+  <script src="analyzer.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
