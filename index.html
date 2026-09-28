@@ -1,63 +1,72 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Следопыт — направление по отпечатку</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
+<html lang="ru"><head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Следопыт</title>
+<style>
+:root{--bg:#12160f;--card:#232b1f;--line:#3a4634;--t:#e8eddf;--m:#9aa58d;--s:#c4b089;--a:#c9a227}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font-family:system-ui}
+.top{padding:12px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;align-items:center}
+h1{margin:0;font-size:18px}p{margin:0;color:var(--m);font-size:12px}
+.btn{background:var(--a);color:#1a1406;border:0;border-radius:10px;padding:10px 14px;font-weight:800}
+.tools{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px}
+.tool{background:#2a3326;border:1px solid var(--line);color:var(--t);border-radius:999px;padding:8px 12px}
+.tool.on{background:var(--a);color:#1a1406}
+.stage{position:relative;height:48vh;background:#0d100c;margin:0 12px;border-radius:12px;overflow:hidden}
+canvas{width:100%;height:100%}
+.box{margin:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.dir{font-size:40px;font-weight:800;line-height:1}
+.muted{color:var(--m)}
+</style></head>
 <body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand">
-        <div class="mark">СЛ</div>
-        <div>
-          <h1>Следопыт</h1>
-          <p>Анализ направления по следу стопы</p>
-        </div>
-      </div>
-      <div class="top-actions">
-        <label class="btn primary">
-          Загрузить фото
-          <input id="fileInput" type="file" accept="image/*" hidden />
-        </label>
-      </div>
-    </header>
-    <main class="layout">
-      <section class="stage-wrap">
-        <div class="toolbar">
-          <div class="tools">
-            <button class="tool" data-tool="heel">Каблук</button>
-            <button class="tool" data-tool="toe">Носок</button>
-            <button class="tool" data-tool="next">След 2</button>
-            <button class="tool" data-tool="scatter">Выброс</button>
-            <button class="tool" data-tool="scaleA">М1</button>
-            <button class="tool" data-tool="scaleB">М2</button>
-          </div>
-          <div class="zoom-box">
-            <button id="btnFit" class="btn ghost">В кадр</button>
-            <button id="btnClear" class="btn ghost">Сброс</button>
-          </div>
-        </div>
-        <div id="stage" class="stage">
-          <canvas id="canvas"></canvas>
-          <div id="empty" class="empty"><strong>Загрузите фото следа</strong><span>Отметьте каблук, носок и след 2 — приложение выдаст курс.</span></div>
-        </div>
-      </section>
-      <aside class="panel">
-        <section class="card verdict"><h2>Направление движения</h2><div id="verdictBody" class="verdict-body muted">Отметьте каблук и носок.</div></section>
-        <section class="card"><h2>Схема</h2><canvas id="scheme" width="640" height="360"></canvas><p class="hint" id="schemeCaption"></p></section>
-        <section class="card"><h2>Как двигался</h2><div id="howMoved" class="narrative muted"></div><ol id="howSteps" class="phases"></ol></section>
-        <section class="card"><h2>Режим</h2><div class="seg" id="gaitMode"><button data-mode="auto" class="active">Авто</button><button data-mode="forward">Вперёд</button><button data-mode="backward">Задом</button></div></section>
-        <section class="card"><h2>Правила</h2><ul class="rules" id="rulesList"></ul></section>
-        <section class="card"><h2>Биомеханика</h2><ol class="phases" id="phases"><li data-phase="heel"><b>Пятка</b><span>посадка</span></li><li data-phase="roll"><b>Прокат</b><span>свод</span></li><li data-phase="push"><b>Толчок</b><span>носок</span></li><li data-phase="lift"><b>Перенос</b><span>выволока</span></li></ol></section>
-        <section class="card"><h2>Рулетка</h2><label class="field">Длина отрезка, см<input id="tapeCm" type="number" min="1" step="0.1" /></label><div id="scaleOut" class="hint"></div></section>
-        <section class="card"><h2>Кадр</h2><label class="field">Север кадра, °<input id="northOffset" type="number" min="0" max="359" value="0" /></label><label class="field">Участок<input id="siteLabel" type="text" /></label><button id="btnReport" class="btn block primary">Полный отчёт</button></section>
-      </aside>
-    </main>
-  </div>
-  <script src="rules.js"></script>
-  <script src="analyzer.js"></script>
-  <script src="app.js"></script>
-</body>
-</html>
+<div class="top"><div><h1>Следопыт</h1><p>Куда шёл нарушитель</p></div>
+<label class="btn">Фото<input id="f" type="file" accept="image/*" hidden></label></div>
+<div class="tools">
+<button class="tool on" data-t="heel">Каблук</button>
+<button class="tool" data-t="toe">Носок</button>
+<button class="tool" data-t="next">След 2</button>
+<button class="tool" id="clr">Сброс</button>
+</div>
+<div class="stage"><canvas id="c"></canvas></div>
+<div class="box" id="out"><span class="muted">Загрузите фото. Тап: каблук → носок → след 2. Ответ — курс.</span></div>
+<script>
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+const st={img:null,tool:'heel',marks:{},s:1,ox:0,oy:0};
+const names=["С","ССВ","СВ","ВСВ","В","ВЮВ","ЮВ","ЮЮВ","Ю","ЮЮЗ","ЮЗ","ЗЮЗ","З","ЗСЗ","СЗ","ССЗ"];
+function rumba(d){return names[Math.round((((d%360)+360)%360)/22.5)%16]}
+function head(a,b){let d=Math.atan2(b.x-a.x,-(b.y-a.y))*180/Math.PI;return d<0?d+360:d}
+function norm(d){d=((d%360)+360)%360;return d}
+function delta(a,b){let d=Math.abs(norm(a)-norm(b));return d>180?360-d:d}
+function resize(){const r=canvas.parentElement.getBoundingClientRect(),p=Math.min(2,devicePixelRatio||1);
+canvas.width=r.width*p;canvas.height=r.height*p;canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';draw()}
+function fit(){if(!st.img)return;const r=canvas.parentElement.getBoundingClientRect();
+st.s=Math.min(r.width/st.img.width,r.height/st.img.height)*0.96;
+st.ox=(r.width-st.img.width*st.s)/2;st.oy=(r.height-st.img.height*st.s)/2}
+function iv(p){return{x:st.ox+p.x*st.s,y:st.oy+p.y*st.s}}
+function vi(x,y){return{x:(x-st.ox)/st.s,y:(y-st.oy)/st.s}}
+function draw(){const p=Math.min(2,devicePixelRatio||1),r=canvas.parentElement.getBoundingClientRect();
+ctx.setTransform(p,0,0,p,0,0);ctx.clearRect(0,0,r.width,r.height);
+if(!st.img)return;ctx.drawImage(st.img,st.ox,st.oy,st.img.width*st.s,st.img.height*st.s);
+const m=st.marks;if(m.heel&&m.toe){const h=iv(m.heel),t=iv(m.toe);
+ctx.strokeStyle='#6ec4ff';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(h.x,h.y);ctx.lineTo(t.x,t.y);ctx.stroke()}
+[['heel','#e8c36a','каблук'],['toe','#6ec4ff','носок'],['next','#b08cff','след 2']].forEach(([k,col,lb])=>{
+if(!m[k])return;const v=iv(m[k]);ctx.fillStyle=col;ctx.beginPath();ctx.arc(v.x,v.y,8,0,6.3);ctx.fill();ctx.fillText(lb,v.x+10,v.y-8)})}
+function answer(){const m=st.marks,el=document.getElementById('out');
+if(!m.heel||!m.toe){el.innerHTML='<span class="muted">Отметьте каблук и носок.</span>';return}
+const face=head(m.heel,m.toe);let gait='unknown',travel=face;
+if(m.next){const mid={x:(m.heel.x+m.toe.x)/2,y:(m.heel.y+m.toe.y)/2};const g=delta(head(mid,m.next),face);
+if(g<70)gait='forward';else if(g>110){gait='backward';travel=norm(face+180)}}
+const mode=gait==='backward'?'ЗАДОМ':gait==='forward'?'ВПЕРЁД':'ЛИЦО (нужен след 2)';
+el.innerHTML=`<div>КУДА ШЁЛ</div><div class="dir">${rumba(travel)}</div>
+<div>${Math.round(travel)}° · ${mode}</div>
+<p>Носок / лицо: ${rumba(face)} (${Math.round(face)}°). ${gait==='backward'?'Лицо и ход противоположны.':gait==='forward'?'Лицо и ход совпадают.':'Третий тап — след 2, иначе режим не утверждается.'}</p>`}
+document.querySelectorAll('.tool[data-t]').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('.tool[data-t]').forEach(x=>x.classList.remove('on'));b.classList.add('on');st.tool=b.dataset.t});
+document.getElementById('clr').onclick=()=>{st.marks={};answer();draw()};
+canvas.onpointerdown=e=>{if(!st.img)return;const r=canvas.getBoundingClientRect();
+const p=vi(e.clientX-r.left,e.clientY-r.top);st.marks[st.tool]=p;answer();draw()};
+document.getElementById('f').onchange=async e=>{const file=e.target.files[0];if(!file)return;
+const img=new Image();img.src=URL.createObjectURL(file);await img.decode();st.img=img;st.marks={};fit();answer();draw()};
+addEventListener('resize',()=>{resize();if(st.img)fit();draw()});resize();
+</script>
+</body></html>
